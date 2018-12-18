@@ -3,5 +3,7 @@
 
 log*
 
-*__python__*
+.idea/
+
+*__pycache__*
 
