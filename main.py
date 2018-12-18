@@ -77,14 +77,22 @@ class Model:
 
         # RNN
         self.lstm_hidden_size = 1
+        
         # self acts, self rewards, opponent acts, opponent rewards
-        self._history_row = np.zeros(dtype=np.float32, shape=(self.batch_size, self.history_length))
-        self._history_col = np.zeros(dtype=np.float32, shape=(self.batch_size, self.history_length))
+#         self._history_row = np.zeros(dtype=np.float32, shape=(self.batch_size, self.history_length))
+#         self._history_col = np.zeros(dtype=np.float32, shape=(self.batch_size, self.history_length))
+
+        self._history_row = np.random.randint(2, size=(self.batch_size, self.history_length))
+        self._history_col = np.random.randint(2, size=(self.batch_size, self.history_length))
+        
         self.history_row = tf.get_variable(name="history_row", dtype=tf.float32,
                                            shape=[self.batch_size, self.history_length])
         self.history_col = tf.get_variable(name="history_col", dtype=tf.float32,
                                            shape=[self.batch_size, self.history_length])
-        if self.sig_type == 'rnn': self.eval_interval = 1; self.eval_number = self.batch_size
+        
+        if self.sig_type == 'rnn': 
+            self.eval_interval = 1; 
+            self.eval_number = self.batch_size
 
         self.output.debug_write(str(args))
         self.sess = tf.Session()
@@ -100,7 +108,8 @@ class Model:
         self._history_col[:, -1] = new_act_row
 
         self.wr(str(self._history_row[0, :]))
-
+        self.wr(str(self._history_col[0, :]))
+        
 
     def setup_env(self):
         self.lr_ = tf.placeholder(name='lr', dtype=tf.float32, shape=[])
@@ -173,7 +182,8 @@ class Model:
                     self.generate_data(pi_row_, pi_col_)
                 else:
                     for i in range(self.eval_number):
-                        self.wr('[Eval:%i]|%s|%s|%s|%s' % (ep, str(list(sig_row[i])), str(list(sig_col[i])), str(pi_row_[i]), str(pi_col_[i])))
+                        self.wr('[Eval:%i]|%s|%s|%s|%s' % (ep, str(list(sig_row[i])), str(list(sig_col[i])), 
+                                                           str(pi_row_[i]), str(pi_col_[i])))
                         print(pi_row[i], pi_col[i])
 
             _, _, log_loss_row, log_loss_col = self.sess.run(

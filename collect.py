@@ -145,6 +145,7 @@ if __name__ == '__main__':
 
     with open(input_path + 'results.txt', 'r', encoding='utf8') as f:
         count = 0
+        portion00 = []
         for line in f:
             if 'Train' in line:
                 train_curve.append(read_train_line(line))
@@ -163,6 +164,7 @@ if __name__ == '__main__':
                         else:
                             ac_portion = visualize(sig_row, ac_row, ac_col, output_path+'%i.jpg' % ep)
                             print(ac_portion)
+                            portion00.append(ac_portion[0])
 
                         # print(sig_col[:10])
                         # print(ac_col[:10])
@@ -170,14 +172,15 @@ if __name__ == '__main__':
 
                     count = 0
                     eval_block = []
+
             if 'Eval' in line:
                 eval_block.append(line)
                 count += 1
-            if len(train_curve) and not len(train_curve) % 500:
-                plt.plot(range(len(train_curve)), np.array(train_curve))
-                plt.savefig(output_path + 'train_curve.jpg')
-                plt.cla()
-                plt.close()
+
+    plt.plot(range(len(portion00)), np.array(portion00))
+    plt.savefig(output_path + 'portion_0|0.jpg')
+    plt.cla()
+    plt.close()
 
     plt.plot(range(len(train_curve)), np.array(train_curve))
     plt.savefig(output_path+'train_curve.jpg')
